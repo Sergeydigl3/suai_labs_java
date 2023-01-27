@@ -1,0 +1,232 @@
+package ru.labs.lab05.matrixes;
+
+import java.util.LinkedList;
+import java.util.ListIterator;
+// Sparse matrix based on LinkedList
+
+class SparseMatrixElement {
+    private final int row;
+    private final int column;
+    private int value;
+
+    public SparseMatrixElement(int row, int column, int value) {
+        this.row = row;
+        this.column = column;
+        this.value = value;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
+
+    public String toString() {
+        return "SparseMatrixElement{" +
+                "row=" + row +
+                ", column=" + column +
+                ", value=" + value +
+                '}';
+    }
+}
+
+class CacheCursor {
+    public ListIterator<SparseMatrixElement> iterator;
+    public int row;
+    public int column;
+
+    public int steps;
+}
+
+// Use private fields: lastIterator, lastIndex
+public class SparseMatrix extends Matrix {
+    private final LinkedList<SparseMatrixElement> matrix;
+    private int rows;
+    private int columns;
+
+    private CacheCursor setCache = new CacheCursor();
+    private CacheCursor getCache = new CacheCursor();
+
+    public SparseMatrix(int rows, int columns) {
+        if (rows <= 0 || columns <= 0) {
+            throw new MatrixException("Matrix size is incorrect");
+        }
+
+        this.rows = rows;
+        this.columns = columns;
+        this.matrix = new LinkedList<>();
+    }
+
+    public SparseMatrix(SparseMatrix matrix) {
+        this.matrix = matrix.getMatrix();
+        this.rows = matrix.getRows();
+        this.columns = matrix.getColumns();
+
+        this.setCache.iterator = this.matrix.listIterator();
+        this.setCache.row = -1;
+        this.setCache.column = -1;
+
+        this.getCache.iterator = this.matrix.listIterator();
+        this.getCache.row = -1;
+        this.getCache.column = -1;
+    }
+
+    protected Matrix createMatrix(int rows, int columns) {
+        return new SparseMatrix(rows, columns);
+    }
+
+    public int getRows() {
+        return rows;
+    }
+
+    public int getColumns() {
+        return columns;
+    }
+
+    public int getElement(int row, int column) {
+        if (row < 0 || row >= rows || column < 0 || column >= columns) {
+            throw new MatrixException("Matrix index is incorrect");
+        }
+
+        if (getCache.iterator == null) {
+            getCache.iterator = matrix.listIterator();
+            getCache.row = -1;
+            getCache.column = -1;
+        }
+
+        if (getCache.row == row && getCache.column == column) {
+            return getCache.iterator.next().getValue();
+        }
+
+        // If rows and columns lower than cache go forward, else backward
+        if (getCache.row < row || (getCache.row == row && getCache.column < column)) {
+            while (getCache.iterator.hasNext()) {
+                SparseMatrixElement element = getCache.iterator.next();
+                if (element.getRow() == row && element.getColumn() == column) {
+                    getCache.row = row;
+                    getCache.column = column;
+                    return element.getValue();
+                }
+                if (element.getRow() > row || (element.getRow() == row && element.getColumn() > column)) {
+                    break;
+                }
+            }
+        } else {
+            while (getCache.iterator.hasPrevious()) {
+                SparseMatrixElement element = getCache.iterator.previous();
+                if (element.getRow() == row && element.getColumn() == column) {
+                    getCache.row = row;
+                    getCache.column = column;
+                    return element.getValue();
+                }
+                if (element.getRow() < row || (element.getRow() == row && element.getColumn() < column)) {
+                    break;
+                }
+            }
+        }
+
+        return 0;
+    }
+
+
+
+    public LinkedList<SparseMatrixElement> getMatrix() {
+        return matrix;
+    }
+
+    public void setElement(final int row, final int column, int value) {
+        if (value == 0) {
+            return;
+        }
+
+        if (row < 0 || row >= rows || column < 0 || column >= columns) {
+            throw new MatrixException("Matrix index is incorrect");
+        }
+
+        if (setCache.iterator == null) {
+            matrix.addLast(new SparseMatrixElement(row, column, value));
+            setCache.iterator = matrix.listIterator();
+            setCache.row = row;
+            setCache.column = column;
+            getCache.iterator = matrix.listIterator();
+            getCache.row = row;
+            getCache.column = column;
+            return;
+        }
+
+        if (setCache.row == row && setCache.column == column) {
+            setCache.iterator.next().setValue(value);
+            return;
+        }
+
+
+        // If rows and columns lower than cache go forward, else backward
+        // if element is not found, add it in the right place with "add"
+        if (setCache.row < row || (setCache.row == row && setCache.column < column)) {
+            while (setCache.iterator.hasNext()) {
+                SparseMatrixElement element = setCache.iterator.next();
+                if (element.getRow() == row && element.getColumn() == column) {
+                    element.setValue(value);
+                    setCache.row = row;
+                    setCache.column = column;
+                    return;
+                }
+                if (element.getRow() == row && element.getColumn() > column) {
+                    setCache.iterator.previous();
+                    break;
+                }
+            }
+        } else {
+            while (setCache.iterator.hasPrevious()) {
+                SparseMatrixElement element = setCache.iterator.previous();
+                if (element.getRow() == row && element.getColumn() == column) {
+                    element.setValue(value);
+                    setCache.row = row;
+                    setCache.column = column;
+                    return;
+                }
+                if (element.getRow() == row && element.getColumn() < column) {
+                    setCache.iterator.next();
+                    break;
+                }
+            }
+        }
+        setCache.iterator.add(new SparseMatrixElement(row, column, value));
+        setCache.row = row;
+        setCache.column = column;
+    }
+
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        // from linked list
+        for (SparseMatrixElement element : matrix) {
+            result.append(element.getValue());
+            result.append(" ");
+
+            if (element.getColumn() == columns - 1) {
+                result.append("\n");
+            }
+        }
+
+        return result.toString();
+    }
+
+    public SparseMatrix sum(final SparseMatrix matrix) {
+        return (SparseMatrix) super.sum(matrix);
+    }
+
+    public SparseMatrix product(final SparseMatrix matrix) {
+        return (SparseMatrix) super.product(matrix);
+    }
+
+}
