@@ -41,35 +41,40 @@ public class Matrix {
         matrix[row][column] = value;
     }
 
-    public void sum(Matrix matrix) {
+    public Matrix sum(Matrix matrix) {
         if (this.rows != matrix.getRows() || this.columns != matrix.getColumns()) {
             throw new MatrixException("Matrix sizes are not equal");
         }
 
+        Matrix result = new Matrix(this.rows, this.columns);
+
         for (int i = 0; i < this.rows; i++) {
             for (int j = 0; j < this.columns; j++) {
-                this.matrix[i][j] += matrix.getElement(i, j);
+                result.setElement(i, j, this.matrix[i][j] + matrix.getElement(i, j));
             }
         }
+
+        return result;
     }
 
-    public void product(Matrix matrix) {
+    public Matrix product(Matrix matrix) {
         if (this.columns != matrix.getRows() || this.rows != matrix.getColumns()) {
             throw new MatrixException("Matrix sizes are not equal");
         }
 
-        int[][] result = new int[this.rows][matrix.getColumns()];
+        Matrix result = new Matrix(this.rows, matrix.getColumns());
 
         for (int i = 0; i < this.rows; i++) {
             for (int j = 0; j < matrix.getColumns(); j++) {
+                int sum = 0;
                 for (int k = 0; k < this.columns; k++) {
-                    result[i][j] += this.matrix[i][k] * matrix.getElement(k, j);
+                    sum += this.matrix[i][k] * matrix.getElement(k, j);
                 }
+                result.setElement(i, j, sum);
             }
         }
 
-        this.matrix = result;
-        this.columns = matrix.getColumns();
+        return result;
     }
 
     public String toString() {
@@ -83,22 +88,25 @@ public class Matrix {
         return result.toString();
     }
 
-    // realise equals
-    // TODO: Fix object to defined type
-    public boolean equals(final Object obj) {
-        if (obj == null) {
+    public boolean equals(Object object) {
+        if (object == null) {
             return false;
         }
-        if (obj == this) {
+
+        if (object == this) {
             return true;
         }
-        if (obj.getClass() != this.getClass()) {
+
+        if (!(object instanceof Matrix)) {
             return false;
         }
-        Matrix matrix = (Matrix) obj;
+
+        Matrix matrix = (Matrix) object;
+
         if (this.rows != matrix.getRows() || this.columns != matrix.getColumns()) {
             return false;
         }
+
         for (int i = 0; i < this.rows; i++) {
             for (int j = 0; j < this.columns; j++) {
                 if (this.matrix[i][j] != matrix.getElement(i, j)) {
@@ -106,8 +114,7 @@ public class Matrix {
                 }
             }
         }
+
         return true;
     }
 }
-// Question: where i can paste "final" keyword?
-// Answer: in class declaration, in method declaration, in variable declaration

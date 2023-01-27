@@ -15,7 +15,7 @@ public class Main {
         System.out.println("Matrix3: ");
         System.out.println(matrix);
         for (int i = 0; i < 9; i++) {
-            matrix.product(matrixCopy);
+            matrix = matrix.product(matrixCopy);
             System.out.println(matrix);
         }
     }

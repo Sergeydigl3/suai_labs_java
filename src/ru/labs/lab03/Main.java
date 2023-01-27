@@ -19,8 +19,14 @@ public class Main {
         System.out.println("Matrix3: ");
         System.out.println(matrix3);
 
+        Matrix matrix2 = new Matrix(2, 2);
+        matrix2.setElement(0, 0, 1);
+        SquareMatrix matrix4 = new SquareMatrix(matrix2);
+        System.out.println("Matrix4: ");
+        System.out.println(matrix4);
+
         try {
-            matrix3.product(matrix);
+            matrix3 = matrix3.product(matrix);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

@@ -43,27 +43,28 @@ public class Matrix {
         matrix[row][column] = value;
     }
 
-    public void sum(Matrix matrix) {
+    public Matrix sum(Matrix matrix) {
+        Matrix result = new Matrix(this.rows, this.columns);
         for (int i = 0; i < this.rows; i++) {
             for (int j = 0; j < this.columns; j++) {
-                this.matrix[i][j] += matrix.getElement(i, j);
+                result.setElement(i, j, this.matrix[i][j] + matrix.getElement(i, j));
             }
         }
+        return result;
     }
 
-    public void product(Matrix matrix) {
-        int[][] result = new int[this.rows][matrix.getColumns()];
-
+    public Matrix product(Matrix matrix) {
+        Matrix result = new Matrix(this.rows, matrix.getColumns());
         for (int i = 0; i < this.rows; i++) {
             for (int j = 0; j < matrix.getColumns(); j++) {
+                int sum = 0;
                 for (int k = 0; k < this.columns; k++) {
-                    result[i][j] += this.matrix[i][k] * matrix.getElement(k, j);
+                    sum += this.matrix[i][k] * matrix.getElement(k, j);
                 }
+                result.setElement(i, j, sum);
             }
         }
-
-        this.matrix = result;
-        this.columns = matrix.getColumns();
+        return result;
     }
 
     public String toString() {
