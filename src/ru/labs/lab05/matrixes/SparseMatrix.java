@@ -1,61 +1,56 @@
 package ru.labs.lab05.matrixes;
 
-import java.util.LinkedList;
-import java.util.ListIterator;
+import ru.labs.lab05.cachedlist.CachedList;
 // Sparse matrix based on LinkedList
 
 class SparseMatrixElement {
-    private final int row;
-    private final int column;
-    private int value;
+    private final int position;
+    public int value;
 
-    public SparseMatrixElement(int row, int column, int value) {
-        this.row = row;
-        this.column = column;
-        this.value = value;
-    }
-
-    public int getRow() {
-        return row;
-    }
-
-    public int getColumn() {
-        return column;
-    }
-
-    public int getValue() {
-        return value;
+    public SparseMatrixElement(int position) {
+        this.position = position;
     }
 
     public void setValue(int value) {
         this.value = value;
     }
 
-    public String toString() {
-        return "SparseMatrixElement{" +
-                "row=" + row +
-                ", column=" + column +
-                ", value=" + value +
-                '}';
+    public int getPosition() {
+        return position;
     }
 }
 
-class CacheCursor {
-    public ListIterator<SparseMatrixElement> iterator;
-    public int row;
-    public int column;
+class ColumnsCache extends CachedList<SparseMatrixElement> {
+    private int row;
 
-    public int steps;
+    public ColumnsCache(int row, int size) {
+        super(size);
+        this.row = row;
+    }
+
+    public int getPosition() {
+        return row;
+    }
+
+    public SparseMatrixElement createElement(int position) {
+        return new SparseMatrixElement(row, position);
+    }
 }
 
-// Use private fields: lastIterator, lastIndex
+class RowsCache extends CachedList<ColumnsCache> {
+    public RowsCache(int size) {
+        super(size);
+    }
+
+    public ColumnsCache createElement(int position) {
+        return new ColumnsCache(position, size);
+    }
+}
+
 public class SparseMatrix extends Matrix {
-    private final LinkedList<SparseMatrixElement> matrix;
+    private final RowsCache matrix;
     private int rows;
     private int columns;
-
-    private CacheCursor setCache = new CacheCursor();
-    private CacheCursor getCache = new CacheCursor();
 
     public SparseMatrix(int rows, int columns) {
         if (rows <= 0 || columns <= 0) {
@@ -64,22 +59,22 @@ public class SparseMatrix extends Matrix {
 
         this.rows = rows;
         this.columns = columns;
-        this.matrix = new LinkedList<>();
+        this.matrix = new ColumnCache(columns, rows);
     }
 
-    public SparseMatrix(SparseMatrix matrix) {
-        this.matrix = matrix.getMatrix();
-        this.rows = matrix.getRows();
-        this.columns = matrix.getColumns();
-
-        this.setCache.iterator = this.matrix.listIterator();
-        this.setCache.row = -1;
-        this.setCache.column = -1;
-
-        this.getCache.iterator = this.matrix.listIterator();
-        this.getCache.row = -1;
-        this.getCache.column = -1;
-    }
+//    public SparseMatrix(SparseMatrix matrix) {
+//        this.matrix = matrix.getMatrix();
+//        this.rows = matrix.getRows();
+//        this.columns = matrix.getColumns();
+//
+//        this.setCache.iterator = this.matrix.listIterator();
+//        this.setCache.row = -1;
+//        this.setCache.column = -1;
+//
+//        this.getCache.iterator = this.matrix.listIterator();
+//        this.getCache.row = -1;
+//        this.getCache.column = -1;
+//    }
 
     protected Matrix createMatrix(int rows, int columns) {
         return new SparseMatrix(rows, columns);
@@ -139,10 +134,9 @@ public class SparseMatrix extends Matrix {
     }
 
 
-
-    public LinkedList<SparseMatrixElement> getMatrix() {
-        return matrix;
-    }
+//    public LinkedList<SparseMatrixElement> getMatrix() {
+//        return matrix;
+//    }
 
     public void setElement(final int row, final int column, int value) {
         if (value == 0) {
@@ -206,20 +200,31 @@ public class SparseMatrix extends Matrix {
         setCache.column = column;
     }
 
-    public String toString() {
-        StringBuilder result = new StringBuilder();
-        // from linked list
-        for (SparseMatrixElement element : matrix) {
-            result.append(element.getValue());
-            result.append(" ");
+    public void newSetElement(final int row, final int column, int value) {
 
-            if (element.getColumn() == columns - 1) {
-                result.append("\n");
-            }
+
+        if (row < 0 || row >= rows || column < 0 || column >= columns) {
+            throw new MatrixException("Matrix index is incorrect");
         }
 
-        return result.toString();
+        SparseMatrixElement element = matrix.setOrCreateCursor(row).setOrCreateCursor(column);
+        element.value = value;
     }
+
+//    public String toString() {
+//        StringBuilder result = new StringBuilder();
+//        // from linked list
+//        for (SparseMatrixElement element : matrix) {
+//            result.append(element.getValue());
+//            result.append(" ");
+//
+//            if (element.getColumn() == columns - 1) {
+//                result.append("\n");
+//            }
+//        }
+//
+//        return result.toString();
+//    }
 
     public SparseMatrix sum(final SparseMatrix matrix) {
         return (SparseMatrix) super.sum(matrix);
