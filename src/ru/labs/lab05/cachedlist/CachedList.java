@@ -14,34 +14,10 @@ public class CachedList<T> {
         this.size = size;
     }
 
-    //    private void setIterator(int position) {
-//        if (iterator == null) {
-//            iterator = list.listIterator();
-//        }
-//        if (position == cursor) {
-//            return;
-//        }
-//        if (position > cursor) {
-//            while (iterator.hasNext()) {
-//                iterator.next();
-//                if (iterator.nextIndex() == position) {
-//                    break;
-//                }
-//            }
-//        } else {
-//            while (iterator.hasPrevious()) {
-//                iterator.previous();
-//                if (iterator.previousIndex() == position) {
-//                    break;
-//                }
-//            }
-//        }
-//        cursor = position;
-//    }
-
     public CachedListElement<T> setOrCreateCursor(int position) {
         if (iterator == null) {
-            list.addLast(new CachedListElement<T>(position));
+            list = new LinkedList<>();
+            list.addLast(new CachedListElement<>(position));
             iterator = list.listIterator();
 
             cursor = position;
@@ -82,8 +58,48 @@ public class CachedList<T> {
                 }
             }
         }
-        iterator.add(new CachedListElement<T>(position));
+        iterator.add(new CachedListElement<>(position));
         cursor = position;
         return iterator.next();
+        // question: Why next() doesn't work here?
+        // answer: because iterator is not pointing to the element, it is pointing to the element before the element
+    }
+
+    // get element by position or return null
+    public CachedListElement<T> get(int position) {
+        if (iterator == null) {
+            return null;
+        }
+
+        if (position == cursor) {
+            return iterator.previous();
+        }
+
+        if (cursor < position) {
+            while (iterator.hasNext()) {
+                CachedListElement<T> element = iterator.next();
+                if (element.getPosition() == position) {
+                    cursor = position;
+                    return element;
+                }
+                if (element.getPosition() > position) {
+                    iterator.previous();
+                    break;
+                }
+            }
+        } else {
+            while (iterator.hasPrevious()) {
+                CachedListElement<T> element = iterator.previous();
+                if (element.getPosition() == position) {
+                    cursor = position;
+                    return element;
+                }
+                if (element.getPosition() < position) {
+                    iterator.next();
+                    break;
+                }
+            }
+        }
+        return null;
     }
 }
