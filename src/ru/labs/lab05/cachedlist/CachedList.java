@@ -8,7 +8,7 @@ public class CachedList<T> {
     protected ListIterator<CachedListElement<T>> iterator;
     public int size;
 
-    private int cursor = -1;
+    CachedListElement<T> element;
 
     public CachedList(int size) {
         this.size = size;
@@ -17,15 +17,15 @@ public class CachedList<T> {
     public CachedListElement<T> setOrCreateCursor(int position) {
         if (iterator == null) {
             list = new LinkedList<>();
-            list.addLast(new CachedListElement<>(position));
+            element = new CachedListElement<>(position);
+            list.addLast(element);
             iterator = list.listIterator();
-
-            cursor = position;
+            
             return iterator.next();
         }
 
-        if (position == cursor) {
-            return iterator.next();
+        if (position == element.getPosition()) {
+            return element;
         }
 
 
@@ -33,36 +33,32 @@ public class CachedList<T> {
         // if element is not found, add it in the right place with "add"
         // Every element use interface "CachedCursorElement" with method "getPosition"
 
-        if (cursor < position) {
+        if (element.getPosition() < position) {
             while (iterator.hasNext()) {
-                CachedListElement<T> element = iterator.next();
+                element = iterator.next();
                 if (element.getPosition() == position) {
-                    cursor = position;
                     return element;
                 }
                 if (element.getPosition() > position) {
-                    iterator.previous();
+                    element = iterator.previous();
                     break;
                 }
             }
         } else {
             while (iterator.hasPrevious()) {
-                CachedListElement<T> element = iterator.previous();
+                element = iterator.previous();
                 if (element.getPosition() == position) {
-                    cursor = position;
                     return element;
                 }
                 if (element.getPosition() < position) {
-                    iterator.next();
+                    element = iterator.next();
                     break;
                 }
             }
         }
-        iterator.add(new CachedListElement<>(position));
-        cursor = position;
-        return iterator.next();
-        // question: Why next() doesn't work here?
-        // answer: because iterator is not pointing to the element, it is pointing to the element before the element
+        element = new CachedListElement<>(position);
+        iterator.add(element);
+        return element;
     }
 
     // get element by position or return null
@@ -71,31 +67,29 @@ public class CachedList<T> {
             return null;
         }
 
-        if (position == cursor) {
-            return iterator.previous();
+        if (position == element.getPosition()) {
+            return element;
         }
 
-        if (cursor < position) {
+        if (element.getPosition() < position) {
             while (iterator.hasNext()) {
-                CachedListElement<T> element = iterator.next();
+                element = iterator.next();
                 if (element.getPosition() == position) {
-                    cursor = position;
                     return element;
                 }
                 if (element.getPosition() > position) {
-                    iterator.previous();
+                    element = iterator.previous();
                     break;
                 }
             }
         } else {
             while (iterator.hasPrevious()) {
-                CachedListElement<T> element = iterator.previous();
+                element = iterator.previous();
                 if (element.getPosition() == position) {
-                    cursor = position;
                     return element;
                 }
                 if (element.getPosition() < position) {
-                    iterator.next();
+                    element = iterator.next();
                     break;
                 }
             }
