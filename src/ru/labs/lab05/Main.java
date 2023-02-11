@@ -8,8 +8,8 @@ import java.util.Random;
 public class Main {
     public static void main(String[] args) {
         // Напишите программу, создающую 2 случайные матрицы размером 1000x1000 с 1000 ненулевых элементов в каждой двумя способами --- с помощью обычных и разреженных матриц. Проверьте, что сложение и умножение для разных видов матриц дает одинаковые результаты.
-        int matrixSizeX = 15;
-        int matrixSizeY = 15;
+        int matrixSizeX = 5;
+        int matrixSizeY = 5;
 
 
         UsualMatrix mUsual = new UsualMatrix(matrixSizeX, matrixSizeY);
@@ -34,7 +34,6 @@ public class Main {
                 }
             }
         }
-
 //        mSparse.getElement(12, 12);
 //        mSparse.getElement(12, 14);
 

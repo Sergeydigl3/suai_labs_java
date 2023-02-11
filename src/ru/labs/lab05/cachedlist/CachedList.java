@@ -96,4 +96,18 @@ public class CachedList<T> {
         }
         return null;
     }
+
+    public void clearCache(){
+        iterator = list.listIterator();
+        element = iterator.next();
+        System.out.println("Cache cleared");
+        if (element.getElement().getClass() != CachedList.class) {
+            return;
+        }
+
+        for (CachedListElement<T> tempElement : list) {
+            CachedList<T> temp = (CachedList<T>) tempElement.getElement();
+            temp.clearCache();
+        }
+    }
 }

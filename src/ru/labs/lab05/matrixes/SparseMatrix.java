@@ -85,12 +85,14 @@ public class SparseMatrix extends Matrix {
 //        return result.toString();
 //    }
 
-    public SparseMatrix sum(final SparseMatrix matrix) {
-        return (SparseMatrix) super.sum(matrix);
+    public SparseMatrix sum(final SparseMatrix matrix_data) {
+        matrix.clearCache();
+        return (SparseMatrix) super.sum(matrix_data);
     }
 
-    public SparseMatrix product(final SparseMatrix matrix) {
-        return (SparseMatrix) super.product(matrix);
+    public SparseMatrix product(final SparseMatrix matrix_data) {
+        matrix.clearCache();
+        return (SparseMatrix) super.product(matrix_data);
     }
 
 }
