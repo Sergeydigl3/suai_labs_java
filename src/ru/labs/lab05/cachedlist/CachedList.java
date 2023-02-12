@@ -100,7 +100,7 @@ public class CachedList<T> {
     public void clearCache(){
         iterator = list.listIterator();
         element = iterator.next();
-        System.out.println("Cache cleared");
+//        System.out.println("Cache cleared");
         if (element.getElement().getClass() != CachedList.class) {
             return;
         }
