@@ -1,5 +1,7 @@
 package ru.labs.lab05.matrixes;
 
+import java.util.Random;
+
 public abstract class Matrix implements IMatrix {
 
     protected abstract Matrix createMatrix(int rows, int columns);
@@ -38,6 +40,16 @@ public abstract class Matrix implements IMatrix {
         }
 
         return result;
+    }
+
+    public void fillRandom(int seed,int bound) {
+        Random r = new Random();
+        r.setSeed(seed);
+        for (int i = 0; i < this.getRows(); i++) {
+            for (int j = 0; j < this.getColumns(); j++) {
+                this.setElement(i, j, r.nextInt(bound));
+            }
+        }
     }
 
     public String toString() {
