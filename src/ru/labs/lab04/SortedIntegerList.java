@@ -60,6 +60,20 @@ public class SortedIntegerList {
         return true;
     }
 
+    public SortedIntegerList remove(SortedIntegerList list) {
+        if (this.repeats != list.repeats) {
+            throw new IllegalArgumentException("Lists types are different");
+        }
+
+        SortedIntegerList result = new SortedIntegerList();
+        for (Integer integer : this.list) {
+            if (!list.list.contains(integer)) {
+                result.add(integer);
+            }
+        }
+        return result;
+    }
+
     public String toString() {
         return list.toString();
     }
