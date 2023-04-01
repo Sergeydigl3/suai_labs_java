@@ -37,7 +37,7 @@ public abstract class Matrix implements IMatrix {
                 }
                 result.setElement(i, j, sum);
             }
-            System.out.println("Row " + i + " is done");
+//            System.out.println("Row " + i + " is done");
         }
 
         return result;
