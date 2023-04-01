@@ -12,19 +12,24 @@ public class Main {
         matrix.setElement(1, 0, 1);
         matrix.setElement(1, 1, 0);
 
-        SquareMatrix matrix3 = new SquareMatrix(3);
-        System.out.println("Matrix: ");
+
+        System.out.println("MatrixSquare with some data: ");
         System.out.println(matrix);
 
-        System.out.println("Matrix3: ");
+        SquareMatrix matrix3 = new SquareMatrix(3);
+        System.out.println("new Matrix3(Square): ");
         System.out.println(matrix3);
 
         Matrix matrix2 = new Matrix(2, 2);
         matrix2.setElement(0, 0, 1);
+        System.out.println("Matrix2: ");
+        System.out.println(matrix2);
+
         SquareMatrix matrix4 = new SquareMatrix(matrix2);
         System.out.println("Matrix4: ");
         System.out.println(matrix4);
 
+        System.out.println("Attempt product matrix3 on matrix: ");
         try {
             matrix3 = matrix3.product(matrix);
         } catch (Exception e) {
