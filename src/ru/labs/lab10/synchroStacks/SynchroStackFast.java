@@ -61,6 +61,8 @@ public class SynchroStackFast {
         }
         activeReaders++;
 
+        //
+
         if (obj instanceof SynchroStackFast) {
             SynchroStackFast other = (SynchroStackFast) obj;
             if (size != other.size) {

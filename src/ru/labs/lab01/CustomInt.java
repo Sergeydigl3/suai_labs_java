@@ -7,6 +7,10 @@ public class CustomInt {
         this.value = value;
     }
 
+    public CustomInt(){
+        this.value = 0;
+    }
+
     public int getValue() {
         return value;
     }
@@ -32,6 +36,7 @@ public class CustomInt {
     }
 
     public String toString() {
-        return Integer.toString(value);
+        String temp = String.valueOf(this.value);
+        return temp;
     }
 }

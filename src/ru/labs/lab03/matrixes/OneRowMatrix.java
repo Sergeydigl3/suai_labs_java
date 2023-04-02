@@ -1,20 +1,20 @@
 package ru.labs.lab03.matrixes;
 
 // same as matrix but every call will be for one existence row
-public class OneRowMatrix{
+public class OneRowMatrix {
     private int[] matrix;
     private int rows;
     private int columns;
 
-    public OneRowMatrix(int columns) {
-        this.rows = 1;
+    public OneRowMatrix(int rows, int columns) {
+        this.rows = rows;
         this.columns = columns;
         matrix = new int[columns];
     }
 
-    public OneRowMatrix(int[] matrix) {
+    public OneRowMatrix(int rows, int[] matrix) {
         this.matrix = matrix;
-        this.rows = 1;
+        this.rows = rows;
         this.columns = matrix.length;
     }
 
@@ -37,9 +37,6 @@ public class OneRowMatrix{
     }
 
     public int getElement(int row, int column) {
-        if (row != 0) {
-            throw new IllegalArgumentException("Row must be 0");
-        }
         if (column >= this.columns) {
             throw new IllegalArgumentException("Column must be less than " + this.columns);
         }
@@ -47,17 +44,15 @@ public class OneRowMatrix{
     }
 
     public void setElement(int row, int column, int value) {
-        if (row != 0) {
-            throw new IllegalArgumentException("Row must be 0");
+        if (column >= this.columns || row >= this.rows) {
+            throw new IllegalArgumentException("Column must be less than " + this.columns + " and row must be less than " + this.rows);
         }
-        if (column >= this.columns) {
-            throw new IllegalArgumentException("Column must be less than " + this.columns);
-        }
+
         matrix[column] = value;
     }
 
     public OneRowMatrix sum(OneRowMatrix matrix) {
-        OneRowMatrix result = new OneRowMatrix(this.columns);
+        OneRowMatrix result = new OneRowMatrix(this.rows, this.columns);
         for (int i = 0; i < this.rows; i++) {
             for (int j = 0; j < this.columns; j++) {
                 result.setElement(i, j, this.matrix[j] + matrix.getElement(i, j));
@@ -67,7 +62,10 @@ public class OneRowMatrix{
     }
 
     public OneRowMatrix product(OneRowMatrix matrix) {
-        OneRowMatrix result = new OneRowMatrix(matrix.getColumns());
+        if (this.columns != matrix.getRows()) {
+            throw new MatrixException("Matrix sizes are not equal for product. This matrix columns must be equal to matrix rows");
+        }
+        OneRowMatrix result = new OneRowMatrix(matrix.getRows(), matrix.getColumns());
         for (int i = 0; i < this.rows; i++) {
             for (int j = 0; j < matrix.getColumns(); j++) {
                 int sum = 0;
@@ -82,8 +80,11 @@ public class OneRowMatrix{
 
     public String toString() {
         StringBuilder result = new StringBuilder();
-        for (int j = 0; j < this.columns; j++) {
-            result.append(this.matrix[j]).append(" ");
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.columns; j++) {
+                result.append(this.matrix[j]).append(" ");
+            }
+            result.append("\n");
         }
         return result.toString();
     }
