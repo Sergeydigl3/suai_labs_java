@@ -18,7 +18,7 @@ public class SquareMatrix extends Matrix {
 
     public SquareMatrix sum(Matrix matrix) {
         if (this.rows != matrix.getRows() || this.columns != matrix.getColumns()) {
-            throw new MatrixException("Matrix sizes are not equal");
+            throw new MatrixException("Matrix sizes are not equal. Matrix A rows count must be equal to matrix B rows count");
         }
 
         SquareMatrix result = new SquareMatrix(this.rows);
@@ -34,7 +34,7 @@ public class SquareMatrix extends Matrix {
 
     public SquareMatrix product(Matrix matrix) {
         if (this.columns != matrix.getRows() || this.rows != matrix.getColumns()) {
-            throw new MatrixException("Matrix sizes are not equal");
+            throw new MatrixException("Matrix sizes are not equal. Matrix A columns count must be equal to matrix B rows count");
         }
 
         SquareMatrix result = new SquareMatrix(this.rows);

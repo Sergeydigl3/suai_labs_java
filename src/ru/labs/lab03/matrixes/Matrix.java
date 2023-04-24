@@ -59,7 +59,7 @@ public class Matrix {
 
     public Matrix product(Matrix matrix) {
         if (this.columns != matrix.getRows() || this.rows != matrix.getColumns()) {
-            throw new MatrixException("Matrix sizes are not equal");
+            throw new MatrixException("Matrix sizes are not equal; m1.rows != m2.columns or m1.columns != m2.rows"  );
         }
 
         Matrix result = new Matrix(this.rows, matrix.getColumns());

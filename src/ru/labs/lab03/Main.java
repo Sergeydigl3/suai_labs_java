@@ -6,35 +6,36 @@ import ru.labs.lab03.matrixes.Matrix;
 public class Main {
     public static void main(String[] args) {
         // Tests for SquareMatrix for exceptions
-        SquareMatrix matrix = new SquareMatrix(2);
-        matrix.setElement(0, 0, 1);
-        matrix.setElement(0, 1, 1);
-        matrix.setElement(1, 0, 1);
-        matrix.setElement(1, 1, 0);
+SquareMatrix matrix1 = new SquareMatrix(2);
+matrix1.setElement(0, 1, 2);
+matrix1.setElement(1, 0, 3);
+System.out.println("Matrix1: ");
+System.out.println(matrix1);
+
+SquareMatrix matrix2 = new SquareMatrix(2);
+
+matrix2.setElement(0, 1, 6);
+matrix2.setElement(1, 0, 7);
+
+System.out.println("Matrix2: ");
+System.out.println(matrix2);
 
 
-        System.out.println("MatrixSquare with some data: ");
-        System.out.println(matrix);
+SquareMatrix result = matrix1.product(matrix2);
+System.out.println("Product of matrix1 and matrix2");
+System.out.println(result.toString());
 
-        SquareMatrix matrix3 = new SquareMatrix(3);
-        System.out.println("new Matrix3(Square): ");
-        System.out.println(matrix3);
+SquareMatrix sum = matrix1.sum(matrix2);
+System.out.println("Sum of matrix1 and matrix2");
+System.out.println(sum.toString());
 
-        Matrix matrix2 = new Matrix(2, 2);
-        matrix2.setElement(0, 0, 1);
-        System.out.println("Matrix2: ");
-        System.out.println(matrix2);
-
-        SquareMatrix matrix4 = new SquareMatrix(matrix2);
-        System.out.println("Matrix4: ");
-        System.out.println(matrix4);
-
-        System.out.println("Attempt product matrix3 on matrix: ");
-        try {
-            matrix3 = matrix3.product(matrix);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
+Matrix matrix3 = new Matrix(2, 3);
+System.out.println("Attempt create SquareMatrix based on NonSquareMatrix");
+try {
+    SquareMatrix matrix4 = new SquareMatrix(matrix3);
+    System.out.println(result);
+} catch (RuntimeException e) {
+    System.out.println(e.getMessage());
+}
     }
 }
