@@ -7,16 +7,17 @@ public class DopMain {
     public static void main(String[] args){
         // Сравнить две реализации SparseMatrix с помощью System.currentTimeMillis() и вывести на экран время работы каждой из них.
 
-        SparseMatrix mSparse = new SparseMatrix(100, 100);
-        SparseMatrixHash mSparseHash = new SparseMatrixHash(100, 100);
+        SparseMatrix mSparse = new SparseMatrix(200, 200);
+        SparseMatrixHash mSparseHash = new SparseMatrixHash(200, 200);
 
         // fill with random
-        for (int i = 0; i < 100; i++) {
-            for (int j = 0; j < 100; j++) {
-                mSparse.setElement(i, j, (int) (Math.random() * 100));
-                mSparseHash.setElement(i, j, (int) (Math.random() * 100));
+        for (int i = 0; i < 200; i++) {
+            for (int j = 0; j < 200; j++) {
+                mSparse.setElement(i, j, (int) (Math.random() * 200));
+                mSparseHash.setElement(i, j, (int) (Math.random() * 200));
             }
         }
+
 
         long start = System.currentTimeMillis();
         mSparse.product(mSparse);

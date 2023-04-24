@@ -8,8 +8,8 @@ import java.util.Random;
 public class Main {
     public static void main(String[] args) {
         // Напишите программу, создающую 2 случайные матрицы размером 1000x1000 с 1000 ненулевых элементов в каждой двумя способами --- с помощью обычных и разреженных матриц. Проверьте, что сложение и умножение для разных видов матриц дает одинаковые результаты.
-        int matrixSizeX = 1000;
-        int matrixSizeY = 1000;
+        int matrixSizeX = 100;
+        int matrixSizeY = 100;
 
 
         UsualMatrix mUsual = new UsualMatrix(matrixSizeX, matrixSizeY);
@@ -17,6 +17,7 @@ public class Main {
 //
         Random r = new Random();
         r.setSeed(0);
+        System.out.println("Fill start");
         for (int i = 0; i < matrixSizeX; i++) {
             for (int j = 0; j < matrixSizeY; j++) {
                 int value = r.nextInt(100);
@@ -25,33 +26,29 @@ public class Main {
             }
 //            System.out.println("Row " + i + " done");
         }
-//      Check same
-//        System.out.println("Check same");
-//        for (int i = 0; i < matrixSizeX; i++) {
-//            for (int j = 0; j < matrixSizeY; j++) {
-//                if (mUsual.getElement(i, j) != mSparse.getElement(i, j)) {
-//                    System.out.println("Not same at " + i + " " + j);
-//                }
-//            }
-//        }
-//        mSparse.getElement(12, 12);
-//        mSparse.getElement(12, 14);
+        System.out.println("Fill end");
+        System.out.println("Check same: " + mUsual.equals(mSparse)+"\n");
 
-        // print SparseMatrix
-//        System.out.println(mSparse.toString());
 //
-//
-//        System.out.println("Sum calc\nUsual start");
-//        UsualMatrix mUsualSum = mUsual.sum(mUsual);
-//        System.out.println("Usual end; Sparse start");
-//        SparseMatrix mSparseSum = mSparse.sum(mSparse);
-//        System.out.println("Sparse end");
-//
-        System.out.println("Product calc\nUsual start");
+        System.out.print("Product usual on usual...");
         UsualMatrix mUsualProduct = mUsual.product(mUsual);
-        System.out.println("Usual end; Sparse start");
+        System.out.println("Done");
+
+        System.out.print("Product sparse on sparse...");
         SparseMatrix mSparseProduct = mSparse.product(mSparse);
-        System.out.println("Sparse end");
+        System.out.println("Done");
+
+        System.out.println("Check same results: " + mUsualProduct.equals(mSparseProduct)+"\n");
+
+        System.out.print("Sum usual on usual...");
+        UsualMatrix mUsualSum = mUsual.sum(mUsual);
+        System.out.println("Done");
+
+        System.out.println("Sum sparse on sparse...");
+        SparseMatrix mSparseSum = mSparse.sum(mSparse);
+        System.out.print("Done");
+
+        System.out.println("Check same results: " + mUsualSum.equals(mSparseSum)+"\n");
 //
 //        System.out.println("Sum:");
 //        System.out.println("Usual: " + mUsualSum.getElement(0, 0));
@@ -64,3 +61,4 @@ public class Main {
 
     }
 }
+//
