@@ -1,4 +1,6 @@
-package ru.labs.lab07;
+package ru.labs.lab07.osnova;
+
+import ru.labs.lab07.osnova.Settings;
 
 import java.io.IOException;
 
