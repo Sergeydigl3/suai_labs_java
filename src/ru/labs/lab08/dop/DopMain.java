@@ -7,7 +7,7 @@ public class DopMain {
     public static void main(String[] args) {
         int n = 6;
         int k = 5;
-        int numThreads = 6;
+        int numThreads = 1;
 
         Combinations combinations = new Combinations(n, k, numThreads);
         try {
